@@ -4,12 +4,12 @@ SEC1186C New High Score: How to Play RBA and Win!
 
 # Searches from Slides
 
-Risk Score Check:
+# Risk Score Check:
 | from datamodel:"Risk"
 | table source risk_factor_add risk_factor_mult risk_score
 
 
-Velocity Tracking:
+# Velocity Tracking:
 | from datamodel:"Risk"."All_Risk" 
 | search `risk_notable_sources` 
 | stats count by search_name 
@@ -18,15 +18,15 @@ Velocity Tracking:
 | outputlookup  risk_velocity.csv
 
 
-Risk Score Limit:
+# Risk Score Limit:
 | eval risk_ScoreSum=if(risk_ScoreSum>500, risk_ScoreSum/5, risk_ScoreSum) 
 
 
-Velocity Risk Score:
+# Velocity Risk Score:
 | eval new_risk_score=(usecase_weight+mitre_weight)*velocity
 
 
-Alert Disposition Tracking:
+# Alert Disposition Tracking:
 `get_notable_index` 
 | eval `get_event_id_meval`, rule_id=event_id, temp_time=time()+86400
 | `suppression_extract` | search NOT suppression=*
@@ -39,6 +39,5 @@ Alert Disposition Tracking:
 | outputlookup alert_disposition_tracking.csv 
 
 
-Risk Score Calcuation:
+# Risk Score Calcuation:
 | eval new_risk_score=((usecase_weight+mitre_weight)*velocity)*closed_weighted_score
-
